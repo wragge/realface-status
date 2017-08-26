@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+          <div class="height-600 text-center">
+            <h1 class="time-chart">{{ total }} {{ title }}</h1>
+            <div id="totals" class="center-block"></div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+    <script>
+        var data = [{
+          x: {{ x | safe }},
+          y: {{ y }},
+          type: 'bar'
+        }];
+
+        var layout = {
+          height: 500,
+          width: 1140,
+          legend: {
+            font: {
+                family: 'Helvetica Neue',
+                size: 12
+            }
+          },
+          xaxis: {
+            range: ['{{ start }}', '{{ end }}'],
+            type: 'date'
+          },
+          margin: {
+            t: 0
+          }
+        };
+
+        Plotly.newPlot('totals', data, layout);
+    </script>
+{% endblock %}

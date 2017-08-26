@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="centered height-300">
+            <h1 class="large">{{ total }} photos<br><small>found</small></h1></div>
+            <div id="totals" class="centered"></div>
+        </div>
+        <div class="col-md-6">
+            <div class="centered height-600"><div><img class="img-responsive thumbnail photo" src="/static/images/photo.jpg">{{ citation }}</div></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+    <script>
+        var data = [{
+          values: [ {{ front }}, {{ side }}],
+          labels: ['Front portrait', 'Side portrait'],
+          type: 'pie'
+        }];
+
+        var layout = {
+          height: 200,
+          width: '100%',
+          legend: {
+            font: {
+                family: 'Helvetica Neue',
+                size: 16
+            },
+            x: 0.65,
+            y: 0.9,
+            xanchor: 'left',
+            yanchor: 'auto'
+          },
+          margin: {
+            l: 0,
+            r: 0,
+            t: 0,
+            b: 0,
+            pad: 0,
+            autoexpand: false
+          }
+        };
+
+        Plotly.newPlot('totals', data, layout);
+    </script>
+{% endblock %}

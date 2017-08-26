@@ -1,0 +1,42 @@
+.centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.height-600 {
+    height: 600px;
+}
+
+.height-300 {
+    height: 300px;
+}
+
+h1.large {
+    font-size: 100px;
+}
+
+h1.x-large {
+    font-size: 120px;
+}
+
+h1.large small {
+    padding-top: 0;
+    line-height: 0.5;
+    margin-top: 20px;
+    display: block;
+}
+
+.photo {
+    max-height: 600px;
+}
+
+.gender {
+    font-size: 140%;
+    margin-right: 10px;
+}
+
+h1.time-chart {
+    margin-top: 40px;
+    font-size: 400%;
+}
