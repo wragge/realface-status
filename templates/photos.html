@@ -21,7 +21,10 @@
         var data = [{
           values: [ {{ front }}, {{ side }}],
           labels: ['Front portrait', 'Side portrait'],
-          type: 'pie'
+          type: 'pie',
+          marker: {
+            colors: colours
+          }
         }];
 
         var layout = {
@@ -29,7 +32,7 @@
           width: '100%',
           legend: {
             font: {
-                family: 'Helvetica Neue',
+                family: 'Lato',
                 size: 16
             },
             x: 0.65,
