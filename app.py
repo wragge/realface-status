@@ -169,7 +169,6 @@ def get_classifications_week():
         {'$match': {'created_at': {'$gt': yesterday}}},
         {'$group': {
             '_id': {
-                'hour': {'$hour': '$created_at'},
                 'day': {'$dayOfMonth': '$created_at'},
                 'month': {'$month': '$created_at'},
                 'year': {'$year': '$created_at'},
@@ -192,7 +191,7 @@ def get_classifications_week():
     y = []
     total = 0
     for result in results:
-        utc_date = datetime(result['_id']['year'], result['_id']['month'], result['_id']['day'], result['_id']['hour'], 0, 0)
+        utc_date = datetime(result['_id']['year'], result['_id']['month'], result['_id']['day'], 0, 0, 0)
         utc_date = utc_date.replace(tzinfo=from_zone)
         local_date = utc_date.astimezone(to_zone)
         x.append(datetime.strftime(local_date, '%Y-%m-%d %H:00:00'))

@@ -20,7 +20,10 @@
         var data = [{
           values: {{ type_totals }},
           labels: {{ type_names | safe }},
-          type: 'pie'
+          type: 'pie',
+          marker: {
+            colors: colours
+          }
         }];
 
         var layout = {

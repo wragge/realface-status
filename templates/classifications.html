@@ -19,7 +19,10 @@
         var data = [{
           x: {{ x | safe }},
           y: {{ y }},
-          type: 'bar'
+          type: 'bar',
+          marker: {
+            color: colours[0]
+          }
         }];
 
         var layout = {

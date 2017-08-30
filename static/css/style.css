@@ -40,3 +40,7 @@ h1.time-chart {
     margin-top: 40px;
     font-size: 400%;
 }
+
+body {
+    font-family: 'Lato', sans-serif;
+}
