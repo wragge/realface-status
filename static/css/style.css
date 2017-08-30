@@ -39,8 +39,10 @@ h1.large small {
 h1.time-chart {
     margin-top: 40px;
     font-size: 400%;
+    margin-bottom: 20px;
 }
 
 body {
     font-family: 'Lato', sans-serif;
 }
+
