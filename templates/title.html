@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid projector">
-    <div class="row">
-    {% for total in totals %}
-        <div class="col-md-4">
-            <div class="centered height-900"><div class="text-muted gender">{{ total.0 }}</div><h1 class="x-large">{{ total.1 }}</h1></div>
-        </div>
-    {% endfor %}
-    </div>
+<div class="centered height-900">
+<h1 class="large">The Real Face of White Australia</h1>
+<img src="/static/images/logo-small.png">
+<h1 class="banner">TRANSCRIBE-A-THON</h1>
+</div>
+
 </div>
 {% endblock %}
 {% block extra_scripts %}

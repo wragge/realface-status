@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid projector">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="centered height-900">
-                <div>
-                <h1 class="large">{{ total }} photos<br><small>found</small></h1>
+      <div class="centered">
+        <div class="height-300 centered">
+          <h1 class="large">{{ total }} photos identified</h1>
+        </div>
+        <div class="flex-row">
+            <div class="height-400 centered">
                 <div id="totals" class="centered"></div>
-                </div>
+            </div>
+            <div class="height-400 centered">
+              <img class="img-responsive crop  photo" src="/static/images/photo.jpg">
+              <div class="transcribed-date">&ndash; identified at {{ updated }}</div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="centered height-900"><div><img class="img-responsive thumbnail photo" src="/static/images/photo.jpg">{{ citation }}</div></div>
-        </div>
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_scripts %}
@@ -30,28 +31,28 @@
           },
           insidetextfont: {
             family: 'Lato',
-            size: 16,
+            size: 18,
             color: '#fff'
 
           },
           outsidetextfont: {
             family: 'Lato',
-            size: 16
+            size: 18
           } 
         }];
 
         var layout = {
           height: 300,
-          width: '100%',
           legend: {
             font: {
                 family: 'Lato',
                 size: 16
             },
-            x: 0.7,
+            x: 0.65,
             y: 1,
             xanchor: 'left',
-            yanchor: 'auto'
+            yanchor: 'auto',
+            bgcolor: 'rgba(0,0,0,0)'
           },
           margin: {
             l: 0,
@@ -60,9 +61,22 @@
             b: 0,
             pad: 0,
             autoexpand: false
-          }
+          },
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          plot_bgcolor: 'rgba(0,0,0,0)',
         };
 
         Plotly.newPlot('totals', data, layout);
+    </script>
+    <script>
+         $(function(){
+            $(".projector").hide();
+            $(".projector").fadeIn(2000);
+            setTimeout(function(){
+                $(".projector").fadeOut(2000,function(){
+                    window.location.href = "/{{ next }}/";
+                })
+            }, {{ delay }})
+        });
     </script>
 {% endblock %}

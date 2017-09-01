@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid projector">
+      <div class="centered">
+        <div class="height-300 centered">
+          <h1 class="large">{{ total }} fields transcribed</h1>
+        </div>
+        <div class="flex-row">
+            <div class="height-400 centered">
+              <img class="img-responsive crop  photo" src="/static/images/transcription.jpg">
+            </div>
+            <div class="height-400 centered">
+              <div class="transcribed">&lsquo;{{ value }}&rsquo;</div>
+              <div class="transcribed-date">&ndash; transcribed at {{ updated }}</div>
+            </div>
+        </div>
+    </div>
+  </div>
+{% endblock %}
+{% block extra_scripts %}
+    <script>
+         $(function(){
+            $(".projector").hide();
+            $(".projector").fadeIn(2000);
+            setTimeout(function(){
+                $(".projector").fadeOut(2000,function(){
+                    window.location.href = "/{{ next }}/";
+                })
+            }, {{ delay }})
+        });
+    </script>
+{% endblock %}

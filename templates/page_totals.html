@@ -39,6 +39,8 @@
         var layout = {
           height: 900,
           width: 900,
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          plot_bgcolor: 'rgba(0,0,0,0)',
           legend: {
             font: {
                 family: 'Lato',
@@ -47,10 +49,22 @@
             x: 0.9,
             y: 0.95,
             xanchor: 'left',
-            yanchor: 'top'
+            yanchor: 'top',
+            bgcolor: 'rgba(0,0,0,0)'
           }
         };
 
         Plotly.newPlot('totals', data, layout);
+    </script>
+    <script>
+         $(function(){
+            $(".projector").hide();
+            $(".projector").fadeIn(2000);
+            setTimeout(function(){
+                $(".projector").fadeOut(2000,function(){
+                    window.location.href = "/{{ next }}/";
+                })
+            }, {{ delay }})
+        });
     </script>
 {% endblock %}

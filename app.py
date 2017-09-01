@@ -24,6 +24,17 @@ PAGE_TYPES = {
     'other_page_type': 'Other'
 }
 
+SLIDE_DELAY = 10000
+
+
+def convert_date(remote):
+    from_zone = tz.gettz('UTC')
+    to_zone = tz.gettz('Australia/ACT')
+    local = remote.replace(tzinfo=from_zone)
+    local = local.astimezone(to_zone)
+    local = datetime.strftime(local, '%l:%M %p, %e %B %Y')
+    return local
+
 
 @app.route('/pages/<barcode>/<page>/')
 def get_page_details(barcode, page):
@@ -97,6 +108,11 @@ def home():
     return render_template('home.html')
 
 
+@app.route('/title/')
+def title():
+    return render_template('title.html', delay=SLIDE_DELAY, next='pages')
+
+
 @app.route('/pages/')
 def get_types():
     dbclient = MongoClient(MONGO_URL)
@@ -113,7 +129,7 @@ def get_types():
         type_names.append(PAGE_TYPES[type['_id']])
         type_totals.append(type['count'])
         total += type['count']
-    return render_template('page_totals.html', total=total, type_names=json.dumps(type_names), type_totals=type_totals)
+    return render_template('page_totals.html', total=total, type_names=json.dumps(type_names), type_totals=type_totals, next="photos", delay=SLIDE_DELAY)
 
 
 @app.route('/photos/')
@@ -124,9 +140,9 @@ def get_photos():
     side = db.subjects.count({'type': 'marked_photo_side'})
     sample = list(db.subjects.find({'type': 'marked_photo_front'}).sort('updated_at', -1).limit(1))[0]
     im_url = sample['location']['standard']
-    details = re.search(r'(\d+)-p(\d+)\.jpg', im_url)
-    item = db.items.find_one({'identifier': details.group(1)})
-    citation = 'NAA: {}, {}, p. {}'.format(item['series'], item['control_symbol'], details.group(2))
+    # details = re.search(r'(\d+)-p(\d+)\.jpg', im_url)
+    # item = db.items.find_one({'identifier': details.group(1)})
+    # citation = 'NAA: {}, {}, p. {}'.format(item['series'], item['control_symbol'], details.group(2))
     im = Image.open(requests.get(im_url, stream=True).raw)
     coords = [
         sample['region']['x'] + 10,
@@ -136,7 +152,8 @@ def get_photos():
     ]
     photo = im.crop(coords)
     photo.save('static/images/photo.jpg')
-    return render_template('photos.html', front=front, side=side, total=front + side, citation=citation)
+    updated = convert_date(sample['updated_at'])
+    return render_template('photos.html', front=front, side=side, total=front + side, updated=updated, next="gender", delay=SLIDE_DELAY)
 
 
 @app.route('/gender/')
@@ -151,7 +168,7 @@ def get_gender():
     results = db.classifications.aggregate(pipeline)
     for result in results:
         totals[result['_id']] = result['count']
-    return render_template('gender.html', totals=totals.items())
+    return render_template('gender.html', totals=totals.items(), next="transcriptions", delay=SLIDE_DELAY)
 
 
 @app.route('/classifications-week/')
@@ -197,7 +214,7 @@ def get_classifications_week():
         x.append(datetime.strftime(local_date, '%Y-%m-%d %H:00:00'))
         y.append(result['count'])
         total += result['count']
-    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last week', total=total)
+    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last week', total=total, next="classifications-day", delay=SLIDE_DELAY)
 
 
 @app.route('/classifications-day/')
@@ -242,5 +259,25 @@ def get_classifications_day():
         x.append(datetime.strftime(local_date, '%Y-%m-%d %H:00:00'))
         y.append(result['count'])
         total += result['count']
-    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last day', total=total)
+    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last day', total=total, next="title", delay=SLIDE_DELAY)
 
+
+@app.route('/transcriptions/')
+def get_transcriptions():
+    dbclient = MongoClient(MONGO_URL)
+    db = dbclient.get_default_database()
+    total = db.subjects.count({'type': {'$regex': '^transcribed_'}})
+    sample = list(db.subjects.find({'type': {'$regex': '^transcribed_'}}).sort('updated_at', -1).limit(1))[0]
+    im_url = sample['location']['standard']
+    im = Image.open(requests.get(im_url, stream=True).raw)
+    coords = [
+        sample['region']['x'] + 10,
+        sample['region']['y'] + 10,
+        sample['region']['x'] + sample['region']['width'] - 10,
+        sample['region']['y'] + sample['region']['height'] - 10
+    ]
+    crop = im.crop(coords)
+    crop.save('static/images/transcription.jpg')
+    value = sample['data']['values'][0]['value']
+    updated = convert_date(sample['updated_at'])
+    return render_template('transcriptions.html', total=total, value=value, updated=updated, next="classifications-week", delay=SLIDE_DELAY)
