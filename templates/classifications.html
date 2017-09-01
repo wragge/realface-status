@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container-fluid projector">
     <div class="row">
         <div class="col-md-12">
-          <div class="height-600 text-center">
+          <div class="height-900 text-center">
             <h1 class="time-chart">{{ total }} {{ title }}</h1>
             <div id="totals" class="center-block"></div>
           </div>
@@ -26,12 +26,11 @@
         }];
 
         var layout = {
-          height: 500,
-          width: 1140,
+          height: 600,
           legend: {
             font: {
                 family: 'Lato',
-                size: 12
+                size: 14
             }
           },
           xaxis: {

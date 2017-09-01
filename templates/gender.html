@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container-fluid projector">
     <div class="row">
     {% for total in totals %}
         <div class="col-md-4">
-            <div class="centered height-600"><div class="text-muted gender">{{ total.0 }}</div><h1 class="x-large">{{ total.1 }}</h1></div>
+            <div class="centered height-900"><div class="text-muted gender">{{ total.0 }}</div><h1 class="x-large">{{ total.1 }}</h1></div>
         </div>
     {% endfor %}
     </div>
