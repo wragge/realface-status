@@ -199,11 +199,11 @@ def get_classifications_week():
     to_zone = tz.gettz('Australia/ACT')
     start = yesterday.replace(tzinfo=from_zone)
     start = start.astimezone(to_zone)
-    start = start.astimezone(to_zone) - timedelta(hours=1)
-    start = (datetime.strftime(start, '%Y-%m-%d %H:00:00'))
+    start = start.astimezone(to_zone) - timedelta(days=1)
+    start = (datetime.strftime(start, '%Y-%m-%d 00:00:00'))
     end = datetime.now(to_zone)
-    end = datetime.now(to_zone) + timedelta(hours=1)
-    end = (datetime.strftime(end, '%Y-%m-%d %H:00:00'))
+    end = datetime.now(to_zone) + timedelta(days=1)
+    end = (datetime.strftime(end, '%Y-%m-%d 00:00:00'))
     x = []
     y = []
     total = 0
@@ -211,7 +211,7 @@ def get_classifications_week():
         utc_date = datetime(result['_id']['year'], result['_id']['month'], result['_id']['day'], 0, 0, 0)
         utc_date = utc_date.replace(tzinfo=from_zone)
         local_date = utc_date.astimezone(to_zone)
-        x.append(datetime.strftime(local_date, '%Y-%m-%d %H:00:00'))
+        x.append(datetime.strftime(local_date, '%Y-%m-%d 00:00:00'))
         y.append(result['count'])
         total += result['count']
     return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last week', total=total, next="classifications-day", delay=SLIDE_DELAY)

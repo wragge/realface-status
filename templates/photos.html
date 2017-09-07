@@ -69,14 +69,59 @@
         Plotly.newPlot('totals', data, layout);
     </script>
     <script>
-         $(function(){
+        $(function(){
             $(".projector").hide();
             $(".projector").fadeIn(2000);
             setTimeout(function(){
                 $(".projector").fadeOut(2000,function(){
                     window.location.href = "/{{ next }}/";
                 })
-            }, {{ delay }})
+            }, {{ delay }});
+            var data = [{
+              values: [ {{ front }}, {{ side }}],
+              labels: ['Front portrait', 'Side portrait'],
+              type: 'pie',
+              marker: {
+                colors: colours
+              },
+              insidetextfont: {
+                family: 'Lato',
+                size: 18,
+                color: '#fff'
+
+              },
+              outsidetextfont: {
+                family: 'Lato',
+                size: 18
+              } 
+            }];
+
+            var layout = {
+              height: 300,
+              legend: {
+                font: {
+                    family: 'Lato',
+                    size: 16
+                },
+                x: 0.65,
+                y: 1,
+                xanchor: 'left',
+                yanchor: 'auto',
+                bgcolor: 'rgba(0,0,0,0)'
+              },
+              margin: {
+                l: 0,
+                r: 0,
+                t: 0,
+                b: 0,
+                pad: 0,
+                autoexpand: false
+              },
+              paper_bgcolor: 'rgba(0,0,0,0)',
+              plot_bgcolor: 'rgba(0,0,0,0)',
+            };
+
+            Plotly.newPlot('totals', data, layout);
         });
     </script>
 {% endblock %}

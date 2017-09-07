@@ -17,46 +17,6 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
     <script>
-        var data = [{
-          values: {{ type_totals }},
-          labels: {{ type_names | safe }},
-          type: 'pie',
-          marker: {
-            colors: colours
-          },
-          insidetextfont: {
-            family: 'Lato',
-            size: 18,
-            color: '#fff'
-
-          },
-          outsidetextfont: {
-            family: 'Lato',
-            size: 18
-          }
-        }];
-
-        var layout = {
-          height: 900,
-          width: 900,
-          paper_bgcolor: 'rgba(0,0,0,0)',
-          plot_bgcolor: 'rgba(0,0,0,0)',
-          legend: {
-            font: {
-                family: 'Lato',
-                size: 16
-            },
-            x: 0.9,
-            y: 0.95,
-            xanchor: 'left',
-            yanchor: 'top',
-            bgcolor: 'rgba(0,0,0,0)'
-          }
-        };
-
-        Plotly.newPlot('totals', data, layout);
-    </script>
-    <script>
          $(function(){
             $(".projector").hide();
             $(".projector").fadeIn(2000);
@@ -65,6 +25,45 @@
                     window.location.href = "/{{ next }}/";
                 })
             }, {{ delay }})
-        });
+
+            var data = [{
+              values: {{ type_totals }},
+              labels: {{ type_names | safe }},
+              type: 'pie',
+              marker: {
+                colors: colours
+              },
+              insidetextfont: {
+                family: 'Lato',
+                size: 18,
+                color: '#fff'
+
+              },
+              outsidetextfont: {
+                family: 'Lato',
+                size: 18
+              }
+            }];
+
+            var layout = {
+              height: 900,
+              width: 900,
+              paper_bgcolor: 'rgba(0,0,0,0)',
+              plot_bgcolor: 'rgba(0,0,0,0)',
+              legend: {
+                font: {
+                    family: 'Lato',
+                    size: 16
+                },
+                x: 0.9,
+                y: 0.95,
+                xanchor: 'left',
+                yanchor: 'top',
+                bgcolor: 'rgba(0,0,0,0)'
+              }
+            };
+
+            Plotly.newPlot('totals', data, layout);
+            });
     </script>
 {% endblock %}
