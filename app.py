@@ -10,6 +10,7 @@ import requests
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from dateutil import tz
+import time
 
 app = Flask(__name__)
 
@@ -138,7 +139,35 @@ def get_photos():
     db = dbclient.get_default_database()
     front = db.subjects.count({'type': 'marked_photo_front'})
     side = db.subjects.count({'type': 'marked_photo_side'})
-    sample = list(db.subjects.find({'type': 'marked_photo_front'}).sort('updated_at', -1).limit(1))[0]
+    sample = list(db.subjects.find({'type': 'marked_photo_front', 'region.width': {'$gte': 100}, 'region.height': {'$gte': 100}}).sort('updated_at', -1).limit(1))[0]
+    print sample
+    im_url = sample['location']['standard']
+    print im_url
+    # details = re.search(r'(\d+)-p(\d+)\.jpg', im_url)
+    # item = db.items.find_one({'identifier': details.group(1)})
+    # citation = 'NAA: {}, {}, p. {}'.format(item['series'], item['control_symbol'], details.group(2))
+    im = Image.open(requests.get(im_url, stream=True).raw)
+    coords = [
+        sample['region']['x'] + 10,
+        sample['region']['y'] + 10,
+        sample['region']['x'] + sample['region']['width'] - 10,
+        sample['region']['y'] + sample['region']['height'] - 10
+    ]
+    print coords
+    photo = im.crop(coords)
+    photo.save('static/images/photo.jpg')
+    updated = convert_date(sample['updated_at'])
+    timestamp = int(time.time())
+    return render_template('photos.html', front=front, side=side, total=front + side, updated=updated, timestamp=timestamp, next="gender", delay=SLIDE_DELAY)
+
+
+@app.route('/prints/')
+def get_prints():
+    dbclient = MongoClient(MONGO_URL)
+    db = dbclient.get_default_database()
+    hand = db.subjects.count({'type': 'marked_handprint'})
+    thumb = db.subjects.count({'type': 'marked_thumbprint'})
+    sample = list(db.subjects.find({'type': 'marked_handprint', 'region.width': {'$gte': 100}, 'region.height': {'$gte': 100}}).sort('updated_at', -1).limit(1))[0]
     im_url = sample['location']['standard']
     # details = re.search(r'(\d+)-p(\d+)\.jpg', im_url)
     # item = db.items.find_one({'identifier': details.group(1)})
@@ -150,10 +179,12 @@ def get_photos():
         sample['region']['x'] + sample['region']['width'] - 10,
         sample['region']['y'] + sample['region']['height'] - 10
     ]
-    photo = im.crop(coords)
-    photo.save('static/images/photo.jpg')
+    print coords
+    handprint = im.crop(coords)
+    handprint.save('static/images/handprint.jpg')
     updated = convert_date(sample['updated_at'])
-    return render_template('photos.html', front=front, side=side, total=front + side, updated=updated, next="gender", delay=SLIDE_DELAY)
+    timestamp = int(time.time())
+    return render_template('prints.html', hand=hand, thumb=thumb, total=hand + thumb, updated=updated, timestamp=timestamp, next="transcriptions", delay=SLIDE_DELAY)
 
 
 @app.route('/gender/')
@@ -168,7 +199,7 @@ def get_gender():
     results = db.classifications.aggregate(pipeline)
     for result in results:
         totals[result['_id']] = result['count']
-    return render_template('gender.html', totals=totals.items(), next="transcriptions", delay=SLIDE_DELAY)
+    return render_template('gender.html', totals=totals.items(), next="prints", delay=SLIDE_DELAY)
 
 
 @app.route('/classifications-week/')
@@ -214,7 +245,7 @@ def get_classifications_week():
         x.append(datetime.strftime(local_date, '%Y-%m-%d 00:00:00'))
         y.append(result['count'])
         total += result['count']
-    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last week', total=total, next="classifications-day", delay=SLIDE_DELAY)
+    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='tasks completed in the last week', total=total, next="classifications-day", delay=SLIDE_DELAY)
 
 
 @app.route('/classifications-day/')
@@ -259,7 +290,7 @@ def get_classifications_day():
         x.append(datetime.strftime(local_date, '%Y-%m-%d %H:00:00'))
         y.append(result['count'])
         total += result['count']
-    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='classifications in the last day', total=total, next="title", delay=SLIDE_DELAY)
+    return render_template('classifications.html', x=x, y=y, start=start, end=end, title='tasks completed in the last day', total=total, next="title", delay=SLIDE_DELAY)
 
 
 @app.route('/transcriptions/')
@@ -267,7 +298,7 @@ def get_transcriptions():
     dbclient = MongoClient(MONGO_URL)
     db = dbclient.get_default_database()
     total = db.subjects.count({'type': {'$regex': '^transcribed_'}})
-    sample = list(db.subjects.find({'type': {'$regex': '^transcribed_'}}).sort('updated_at', -1).limit(1))[0]
+    sample = list(db.subjects.find({'type': {'$regex': '^transcribed_'}, 'region.width': {'$gte': 100}}).sort('updated_at', -1).limit(1))[0]
     im_url = sample['location']['standard']
     im = Image.open(requests.get(im_url, stream=True).raw)
     coords = [
@@ -280,4 +311,5 @@ def get_transcriptions():
     crop.save('static/images/transcription.jpg')
     value = sample['data']['values'][0]['value']
     updated = convert_date(sample['updated_at'])
-    return render_template('transcriptions.html', total=total, value=value, updated=updated, next="classifications-week", delay=SLIDE_DELAY)
+    timestamp = int(time.time())
+    return render_template('transcriptions.html', total=total, value=value, updated=updated, timestamp=timestamp, next="classifications-week", delay=SLIDE_DELAY)

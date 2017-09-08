@@ -3,14 +3,14 @@
 <div class="container-fluid projector">
       <div class="centered">
         <div class="height-300 centered">
-          <h1 class="large">{{ total }} photos found</h1>
+          <h1 class="large">{{ total }} hand and thumb prints found</h1>
         </div>
         <div class="flex-row">
             <div class="height-400 centered">
                 <div id="totals" class="centered"></div>
             </div>
             <div class="height-400 centered">
-              <img class="img-responsive crop photo" src="/static/images/photo.jpg?timestamp={{ timestamp }}">
+              <img class="img-responsive crop photo" src="/static/images/handprint.jpg?timestamp={{ timestamp }}">
               <div class="transcribed-date">&ndash; marked at {{ updated }}</div>
             </div>
         </div>
@@ -31,8 +31,8 @@
                 })
             }, {{ delay }});
             var data = [{
-              values: [ {{ front }}, {{ side }}],
-              labels: ['Front portrait', 'Side portrait'],
+              values: [ {{ hand }}, {{ thumb }}],
+              labels: ['Handprint', 'Thumbprint'],
               type: 'pie',
               marker: {
                 colors: colours

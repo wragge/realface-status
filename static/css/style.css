@@ -79,19 +79,19 @@ h1.banner {
 }
 
 .photo {
-    max-height: 600px;
+    max-height: 400px;
     margin-bottom: 20px;
 }
 
 .gender {
-    font-size: 140%;
+    font-size: 60px;
     margin-right: 10px;
 }
 
 h1.time-chart {
     margin-top: 40px;
     font-size: 400%;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 body {
