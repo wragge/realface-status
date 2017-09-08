@@ -25,7 +25,7 @@ PAGE_TYPES = {
     'other_page_type': 'Other'
 }
 
-SLIDE_DELAY = 10000
+SLIDE_DELAY = 20000
 
 
 def convert_date(remote):
