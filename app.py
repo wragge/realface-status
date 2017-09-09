@@ -198,7 +198,9 @@ def get_gender():
     ]
     results = db.classifications.aggregate(pipeline)
     for result in results:
-        totals[result['_id']] = result['count']
+        if result['_id'] is not None:
+            totals[result['_id']] = result['count']
+    print totals
     return render_template('gender.html', totals=totals.items(), next="prints", delay=SLIDE_DELAY)
 
 
