@@ -2,3 +2,6 @@
 .DS_Store
 .env
 photo.jpg
+data
+credentials.py
+processing.py

@@ -1,15 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-fluid projector">
-<h1 class="large">current views</h1>
-<ul>
-    <li><a href="/pages/">page types</a></li>
-    <li><a href="/photos/">photos</a></li>
-    <li><a href="/gender/">gender</a></li>
-    <li><a href="/transcriptions/">transcriptions</a></li>
-    <li><a href="/classifications-week/">classifications in the last week</a></li>
-    <li><a href="/classifications-day/">classifications in the last day</a></li>
-</ul>
-
+    <div class="centered height-900">
+    <h1>current views</h1>
+    <ul>
+        <li><a href="/title/">start slideshow</a></li>
+        <li><a href="/pages/">page types</a></li>
+        <li><a href="/photos/">photos</a></li>
+        <li><a href="/gender/">gender</a></li>
+        <li><a href="/transcriptions/">transcriptions</a></li>
+        <li><a href="/classifications-week/">classifications in the last week</a></li>
+        <li><a href="/classifications-day/">classifications in the last day</a></li>
+    </ul>
+    </div>
 </div>
+{% endblock %}
+{% block extra_scripts %}
+    <script>
+         $(function(){
+            $(".projector").show();
+        });
+    </script>
 {% endblock %}

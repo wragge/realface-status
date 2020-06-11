@@ -93,7 +93,7 @@ def find_subjects_with_data():
         except KeyError:
             value = complete['data']['value']
         root = find_root(complete)
-        print root
+        print(root)
         barcode = root['meta_data']['set_key']
         page_number = re.search(r'p(\d+)\.jpg', root['location']['standard']).group(1)
         page_id = '{}-{}'.format(barcode, page_number)
@@ -140,9 +140,9 @@ def get_photos():
     front = db.subjects.count({'type': 'marked_photo_front'})
     side = db.subjects.count({'type': 'marked_photo_side'})
     sample = list(db.subjects.find({'type': 'marked_photo_front', 'region.width': {'$gte': 100}, 'region.height': {'$gte': 100}}).sort('updated_at', -1).limit(1))[0]
-    print sample
+    print(sample)
     im_url = sample['location']['standard']
-    print im_url
+    print(im_url)
     # details = re.search(r'(\d+)-p(\d+)\.jpg', im_url)
     # item = db.items.find_one({'identifier': details.group(1)})
     # citation = 'NAA: {}, {}, p. {}'.format(item['series'], item['control_symbol'], details.group(2))
@@ -153,7 +153,7 @@ def get_photos():
         sample['region']['x'] + sample['region']['width'] - 10,
         sample['region']['y'] + sample['region']['height'] - 10
     ]
-    print coords
+    print(coords)
     photo = im.crop(coords)
     photo.save('static/images/photo.jpg')
     updated = convert_date(sample['updated_at'])
@@ -179,7 +179,7 @@ def get_prints():
         sample['region']['x'] + sample['region']['width'] - 10,
         sample['region']['y'] + sample['region']['height'] - 10
     ]
-    print coords
+    print(coords)
     handprint = im.crop(coords)
     handprint.save('static/images/handprint.jpg')
     updated = convert_date(sample['updated_at'])
@@ -200,7 +200,7 @@ def get_gender():
     for result in results:
         if result['_id'] is not None:
             totals[result['_id']] = result['count']
-    print totals
+    print(totals)
     return render_template('gender.html', totals=totals.items(), next="prints", delay=SLIDE_DELAY)
 
 
@@ -209,7 +209,7 @@ def get_classifications_week():
     dbclient = MongoClient(MONGO_URL)
     db = dbclient.get_default_database()
     yesterday = datetime.utcnow() - timedelta(days=7)
-    print yesterday
+    print(yesterday)
     sort_dict = OrderedDict()
     sort_dict['_id.year'] = 1
     sort_dict['_id.month'] = 1
@@ -255,7 +255,7 @@ def get_classifications_day():
     dbclient = MongoClient(MONGO_URL)
     db = dbclient.get_default_database()
     yesterday = datetime.utcnow() - timedelta(days=1)
-    print yesterday
+    print(yesterday)
     sort_dict = OrderedDict()
     sort_dict['_id.year'] = 1
     sort_dict['_id.month'] = 1
